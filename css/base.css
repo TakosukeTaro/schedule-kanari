@@ -1,0 +1,160 @@
+/* 共通レイアウト（スマホ専用） */
+
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", "Noto Sans CJK JP", Roboto, sans-serif;
+  --bg: #ffffff;
+  --text: #1f2328;
+  --muted: #5b636e;
+  --line: #d8dde3;
+  --accent: #1f4e8c;
+  --accent-text: #ffffff;
+  --top-bg: #fff1c2;
+  --error-bg: #fdecec;
+  --error-text: #a11a1a;
+  --radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.error {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--error-bg);
+  color: var(--error-text);
+  font-weight: bold;
+  white-space: pre-line;
+}
+
+.status {
+  min-height: 1.6em;
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: right;
+}
+
+/* ---- メインページ ---- */
+
+.member-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.member-link {
+  display: block;
+  padding: 12px 8px;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+
+.summary {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary th,
+.summary td {
+  border-bottom: 1px solid var(--line);
+}
+
+.summary thead th {
+  padding: 0;
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 4px;
+  border: 0;
+  background: transparent;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sort-ind {
+  display: inline-block;
+  width: 1em;
+  font-size: 12px;
+}
+
+.summary .col-date {
+  padding: 12px 8px;
+  font-weight: normal;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.summary thead .col-date .sort-btn {
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+
+.summary .col-count {
+  width: 18%;
+  padding: 12px 4px;
+  text-align: center;
+}
+
+.summary tr.is-top {
+  background: var(--top-bg);
+}
+
+.summary tr.is-top .col-date {
+  font-weight: bold;
+}
+
+.summary-empty {
+  margin: 16px 0;
+  color: var(--muted);
+  text-align: center;
+}

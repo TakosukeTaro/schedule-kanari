@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>飲み会日程調整</title>
+  <link rel="stylesheet" href="css/base.css">
+  <script src="js/common.js" defer></script>
+</head>
+<body data-page="main">
+  <main class="page">
+    <h1>飲み会日程調整</h1>
+
+    <p id="error" class="error" role="alert" hidden></p>
+
+    <ul id="member-links" class="member-links"></ul>
+
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <table class="summary">
+      <thead>
+        <tr>
+          <th class="col-date" aria-sort="ascending"><button type="button" class="sort-btn" data-sort="date">日付<span class="sort-ind"></span></button></th>
+          <th class="col-count" aria-sort="none"><button type="button" class="sort-btn" data-sort="o">〇<span class="sort-ind"></span></button></th>
+          <th class="col-count" aria-sort="none"><button type="button" class="sort-btn" data-sort="t">△<span class="sort-ind"></span></button></th>
+          <th class="col-count" aria-sort="none"><button type="button" class="sort-btn" data-sort="x">×<span class="sort-ind"></span></button></th>
+        </tr>
+      </thead>
+      <tbody id="summary-body"></tbody>
+    </table>
+    <p id="summary-empty" class="summary-empty" hidden>候補日がまだありません</p>
+  </main>
+</body>
+</html>
