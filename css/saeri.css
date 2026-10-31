@@ -1,0 +1,18 @@
+/* さえり：コーラルピンク系・太めの文字・角ばったボタン・大きめの見出しでキリッと */
+
+:root {
+  --accent: #c2453f;
+  --accent-text: #ffffff;
+  --heading-color: #b23c37;
+  --heading-size: 28px;
+  --surface: #fdeeec;
+  --line: #efc4c0;
+  --weight: 500;
+  --weight-strong: 800;
+  --radius: 2px;
+  --btn-radius: 0;
+}
+
+.answer-title {
+  letter-spacing: 0.04em;
+}

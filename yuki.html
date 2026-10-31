@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>ゆきの回答｜飲み会日程調整</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/yuki.css">
+  <script src="js/common.js" defer></script>
+</head>
+<body data-page="answer" data-member-id="yuki">
+  <main class="page">
+    <a class="back-link" href="index.html">メインページへ戻る</a>
+    <h1 class="answer-title">ゆきの回答</h1>
+    <p class="lead">都合のいい日を選んでね</p>
+
+    <p id="error" class="error" role="alert" hidden data-message="エラーが発生したよ。&#10;自分で何とかしなさいっ！"></p>
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <ul id="answer-list" class="answer-list"></ul>
+
+    <button id="submit" class="btn btn-primary submit-btn" type="button" disabled>回答を送信する</button>
+  </main>
+
+  <div id="confirm" class="dialog-backdrop" hidden>
+    <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-text">
+      <p id="confirm-text" class="dialog-text">未回答の日があるよ。
+忘れずに回答してね。</p>
+      <div class="dialog-actions">
+        <button id="confirm-send" class="btn btn-primary" type="button">このまま送信する</button>
+        <button id="confirm-back" class="btn btn-secondary" type="button">戻って入力する</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden data-message="送信完了！"></div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>かんとの回答｜飲み会日程調整</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/kanto.css">
+  <script src="js/common.js" defer></script>
+</head>
+<body class="is-modal" data-page="answer" data-member-id="kanto">
+  <main class="page" inert>
+    <a class="back-link" href="index.html">光の速さでメインページへ戻ろうかねぇ〜</a>
+    <h1 class="answer-title">光の速さで回答する、かんとだねぇ〜</h1>
+    <p class="lead">光の速さで都合のいい日を選んでくれるかい〜？</p>
+
+    <p id="error" class="error" role="alert" hidden data-message="オー…エラーが起きちゃったねぇ〜&#10;光の速さで自分でなんとかしてくれるかい〜？"></p>
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <ul id="answer-list" class="answer-list"></ul>
+
+    <button id="submit" class="btn btn-primary submit-btn" type="button" disabled>光の速さで送信しちゃうよぉ〜</button>
+  </main>
+
+  <div id="confirm" class="dialog-backdrop" hidden>
+    <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-text">
+      <p id="confirm-text" class="dialog-text">未回答の日があるねぇ〜
+光の速さで回答してくれるかい〜？</p>
+      <div class="dialog-actions">
+        <button id="confirm-send" class="btn btn-primary" type="button">光の速さで送っちゃうよぉ〜</button>
+        <button id="confirm-back" class="btn btn-secondary" type="button">光の速さで入力し直そうかねぇ〜</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden data-message="光の速さで送信完了だねぇ〜"></div>
+
+  <!-- カットイン演出（kanto 専用）。CSS アニメーションだけで進み、終了後に common.js が取り除く -->
+  <div id="cutin" class="cutin">
+    <div class="cutin-stage">
+      <div class="cutin-band cutin-band--top" aria-hidden="true">
+        <div class="cutin-track">
+          <span>WARNING</span><span>WARNING</span><span>WARNING</span><span>WARNING</span><span>WARNING</span><span>WARNING</span>
+        </div>
+      </div>
+      <div class="cutin-band cutin-band--bottom" aria-hidden="true">
+        <div class="cutin-track">
+          <span>WARNING</span><span>WARNING</span><span>WARNING</span><span>WARNING</span><span>WARNING</span><span>WARNING</span>
+        </div>
+      </div>
+      <div class="cutin-flash" aria-hidden="true"></div>
+      <p class="cutin-text">光の速さで<br>回答したことは<br>あるかい？</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -181,7 +181,8 @@ body.is-modal {
 }
 
 .back-link {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   margin: 0 0 12px;
   padding: 6px 0;
   color: var(--heading-color);

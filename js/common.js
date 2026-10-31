@@ -373,10 +373,32 @@
   }
 
   // -------------------------------------------------------------------------
+  // カットイン演出（#cutin がある画面のみ）
+  // 動き自体は CSS アニメーション。ここでは終了後に取り除き、回答画面を操作可能に戻すだけ。
+  // 演出中は #cutin が画面全体を覆い、main は inert なのでタップや操作は受け付けない。
+
+  var CUTIN_MS = 3000;
+
+  function runCutin() {
+    var cutin = document.getElementById('cutin');
+    if (!cutin) return;
+    setTimeout(function () {
+      cutin.remove();
+      document.querySelector('main').removeAttribute('inert');
+      document.body.classList.remove('is-modal');
+    }, CUTIN_MS);
+  }
+
+  // -------------------------------------------------------------------------
 
   document.addEventListener('DOMContentLoaded', function () {
     var page = document.body.getAttribute('data-page');
-    if (page === 'main') initMain();
-    else if (page === 'answer') initAnswer();
+    if (page === 'main') {
+      initMain();
+    } else if (page === 'answer') {
+      runCutin();
+      // データの読み込みは演出と並行して進める
+      initAnswer();
+    }
   });
 })();

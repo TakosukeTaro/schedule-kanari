@@ -1,0 +1,21 @@
+/* ゆき：水色系（雪のイメージ）・細めの文字・大きな角丸でふんわり */
+
+:root {
+  --accent: #2a72a8;
+  --accent-text: #ffffff;
+  --heading-color: #1f6391;
+  --surface: #eaf5fc;
+  --line: #c3dff0;
+  --weight: 300;
+  --weight-strong: 500;
+  --radius: 20px;
+  --btn-radius: 999px;
+}
+
+body {
+  background: #f7fbfe;
+}
+
+.mark-btn {
+  border-width: 1.5px;
+}

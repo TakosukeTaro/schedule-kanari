@@ -1,0 +1,224 @@
+/* かんと：黄色＋黒・太めのゴシック体。黄色はアクセントだけに使い、文字は黒 */
+
+:root {
+  --accent: #ffd400;
+  --accent-text: #111111;
+  --heading-color: #111111;
+  --text: #111111;
+  --surface: #fff8d6;
+  --line: #e6d98a;
+  --weight: 700;
+  --weight-strong: 800;
+  --mark-selected-bg: #ffd400;
+  --mark-selected-text: #111111;
+}
+
+.answer-title {
+  display: inline;
+  padding: 0 2px;
+  background: linear-gradient(transparent 58%, #ffd400 58%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.answer-title + .lead {
+  margin-top: 12px;
+}
+
+.mark-btn[aria-pressed="true"],
+.btn {
+  border-color: #111111;
+}
+
+.toast {
+  background: #111111;
+  color: #ffd400;
+}
+
+/* ---- カットイン演出（全体で約3秒） ----
+ * 0.0s 暗転、0.1s 警告帯が流れ込む
+ * 1.0s 黄色い閃光が斜めに1回だけ走り、画面が揺れる
+ * 1.25s セリフを叩きつけるように表示
+ * 2.3s〜3.0s 光に溶けるように消える
+ * 閃光は1回だけで、点滅の繰り返しはしない
+ */
+
+.cutin {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  background: #000000;
+  animation: cutin-out 0.7s ease-in 2.3s forwards;
+}
+
+.cutin-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: cutin-shake 0.35s linear 1.05s;
+}
+
+.cutin-band {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: repeating-linear-gradient(-45deg, #ffd400 0 18px, #111111 18px 36px);
+  border-top: 3px solid #ffd400;
+  border-bottom: 3px solid #ffd400;
+}
+
+.cutin-band--top {
+  top: 10%;
+  transform: translateX(-110%) rotate(-4deg);
+  animation: band-in-top 0.35s ease-out 0.1s forwards;
+}
+
+.cutin-band--bottom {
+  bottom: 10%;
+  transform: translateX(110%) rotate(-4deg);
+  animation: band-in-bottom 0.35s ease-out 0.1s forwards;
+}
+
+.cutin-track {
+  display: flex;
+  gap: 28px;
+  padding-right: 28px;
+  white-space: nowrap;
+  animation: track-left 1.6s linear infinite;
+}
+
+.cutin-band--bottom .cutin-track {
+  animation-name: track-right;
+}
+
+.cutin-track span {
+  padding: 2px 12px;
+  background: #ffd400;
+  color: #111111;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+
+.cutin-flash {
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 45vw;
+  height: 200%;
+  background: linear-gradient(90deg, rgba(255, 212, 0, 0), rgba(255, 220, 40, 0.9) 35%, #fff6b0 50%, rgba(255, 220, 40, 0.9) 65%, rgba(255, 212, 0, 0));
+  opacity: 0;
+  transform: translateX(-70vw) rotate(20deg);
+  animation: flash-sweep 0.35s ease-out 1s forwards;
+}
+
+.cutin-text {
+  position: relative;
+  margin: 0;
+  padding: 0 16px;
+  color: #ffd400;
+  font-size: clamp(32px, 11vw, 52px);
+  font-weight: 900;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 3px 3px 0 #000000, 0 0 18px rgba(255, 212, 0, 0.55);
+  opacity: 0;
+  transform: scale(2.6);
+  animation:
+    text-slam 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.25s forwards,
+    text-out 0.7s ease-in 2.3s forwards;
+}
+
+@keyframes band-in-top {
+  to { transform: translateX(0) rotate(-4deg); }
+}
+
+@keyframes band-in-bottom {
+  to { transform: translateX(0) rotate(-4deg); }
+}
+
+@keyframes track-left {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes track-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes flash-sweep {
+  0% { opacity: 0; transform: translateX(-70vw) rotate(20deg); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(160vw) rotate(20deg); }
+}
+
+@keyframes cutin-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-8px, 4px); }
+  40% { transform: translate(7px, -5px); }
+  60% { transform: translate(-5px, 3px); }
+  80% { transform: translate(3px, -2px); }
+}
+
+@keyframes text-slam {
+  0% { opacity: 0; transform: scale(2.6); }
+  60% { opacity: 1; transform: scale(0.94); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes text-out {
+  from { opacity: 1; transform: scale(1); filter: blur(0); }
+  to { opacity: 0; transform: scale(1.15); filter: blur(8px); }
+}
+
+@keyframes cutin-out {
+  0% { background: #000000; opacity: 1; }
+  40% { background: #fff4c2; opacity: 1; }
+  100% { background: #fffbe8; opacity: 0; visibility: hidden; }
+}
+
+/* 「視差効果を減らす」設定の人には、揺れをなくし、閃光と動きを控えめにする */
+@media (prefers-reduced-motion: reduce) {
+  .cutin-stage {
+    animation: none;
+  }
+
+  .cutin-flash {
+    animation-name: flash-soft;
+  }
+
+  .cutin-track {
+    animation: none;
+  }
+
+  .cutin-text {
+    transform: none;
+    animation:
+      text-fade 0.3s ease-out 1.25s forwards,
+      text-out-soft 0.7s ease-in 2.3s forwards;
+  }
+
+  @keyframes flash-soft {
+    0% { opacity: 0; transform: translateX(-70vw) rotate(20deg); }
+    50% { opacity: 0.35; }
+    100% { opacity: 0; transform: translateX(160vw) rotate(20deg); }
+  }
+
+  @keyframes text-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes text-out-soft {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+}
