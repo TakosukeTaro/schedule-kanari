@@ -201,14 +201,23 @@ function readDataRows_(sheetName, numCols) {
   return sheet.getRange(2, 1, lastRow - 1, numCols).getValues();
 }
 
-/** セルの値（日付型 or 文字列）を yyyy-MM-dd に変換する。変換できなければ null */
+/** セルの値（日付型・シリアル値・文字列）を yyyy-MM-dd に変換する。変換できなければ null */
 function normalizeDate_(v) {
-  if (v instanceof Date) {
+  if (Object.prototype.toString.call(v) === '[object Date]') {
     if (isNaN(v.getTime())) return null;
     return Utilities.formatDate(v, TZ, 'yyyy-MM-dd');
   }
+  if (typeof v === 'number') {
+    // スプレッドシートのシリアル値（1899/12/30 からの日数）
+    if (!isFinite(v) || v < 1) return null;
+    const d = new Date(Date.UTC(1899, 11, 30) + Math.floor(v) * 86400000);
+    return Utilities.formatDate(d, 'UTC', 'yyyy-MM-dd');
+  }
   if (typeof v !== 'string') return null;
-  const m = v.trim().match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);
+  const s = v.trim()
+    .replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/[／－]/g, '/');
+  const m = s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);
   if (!m) return null;
   const month = Number(m[2]);
   const day = Number(m[3]);
@@ -231,4 +240,13 @@ function json_(obj) {
 
 function testDoGet() {
   console.log(doGet().getContent());
+}
+
+/** dates シートの各セルが、どんな値として読めているかを表示する */
+function testDates() {
+  readDataRows_(SHEET_DATES, 1).forEach(function (r, i) {
+    const v = r[0];
+    console.log((i + 2) + '行目: ' + Object.prototype.toString.call(v) + ' ' +
+      JSON.stringify(String(v)) + ' → ' + normalizeDate_(v));
+  });
 }
