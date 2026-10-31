@@ -189,9 +189,194 @@
   }
 
   // -------------------------------------------------------------------------
+  // 回答画面
+  // メンバーID は <body data-member-id="…">、メンバーごとの文言は各 HTML に書いておく。
+
+  var TOAST_MS = 3000;
+
+  function initAnswer() {
+    var memberId = document.body.getAttribute('data-member-id') || '';
+    if (!MEMBER_ID_PATTERN.test(memberId)) return;
+
+    var listEl = document.getElementById('answer-list');
+    var submitBtn = document.getElementById('submit');
+    var errorEl = document.getElementById('error');
+    var statusEl = document.getElementById('status');
+    var dialogEl = document.getElementById('confirm');
+    var confirmSendBtn = document.getElementById('confirm-send');
+    var confirmBackBtn = document.getElementById('confirm-back');
+    var toastEl = document.getElementById('toast');
+
+    var submitLabel = submitBtn.textContent;
+    var dates = [];
+    var selection = {};
+    var busy = false;
+    var toastTimer = null;
+
+    function setBusy(on, statusText) {
+      busy = on;
+      statusEl.textContent = statusText || '';
+      submitBtn.disabled = on || dates.length === 0;
+      submitBtn.setAttribute('aria-busy', on ? 'true' : 'false');
+      Array.prototype.forEach.call(listEl.querySelectorAll('.mark-btn'), function (b) {
+        b.disabled = on;
+      });
+    }
+
+    function showError() {
+      errorEl.textContent = errorEl.getAttribute('data-message');
+      errorEl.hidden = false;
+      errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideError() {
+      errorEl.hidden = true;
+    }
+
+    function showToast() {
+      toastEl.textContent = toastEl.getAttribute('data-message');
+      toastEl.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toastEl.hidden = true; }, TOAST_MS);
+    }
+
+    /** 自分の回答を読み込み直す（画面を開いたときと送信完了直後のみ） */
+    function load() {
+      setBusy(true, '読み込み中…');
+      return fetchData()
+        .then(function (data) {
+          dates = data.dates.slice().sort();
+          selection = {};
+          data.answers.forEach(function (a) {
+            if (a.memberId === memberId && dates.indexOf(a.date) !== -1) selection[a.date] = a.mark;
+          });
+          render();
+          hideError();
+        })
+        .catch(showError)
+        .then(function () { setBusy(false); });
+    }
+
+    function render() {
+      listEl.replaceChildren();
+      dates.forEach(function (d) {
+        var li = el('li', 'answer-row');
+        li.setAttribute('data-date', d);
+        var label = el('span', 'answer-date', formatDate(d));
+        label.id = 'date-' + d;
+        var group = el('div', 'marks');
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-labelledby', label.id);
+        MARKS.forEach(function (m) {
+          var b = el('button', 'mark-btn', m);
+          b.type = 'button';
+          b.setAttribute('data-mark', m);
+          group.appendChild(b);
+        });
+        li.appendChild(label);
+        li.appendChild(group);
+        listEl.appendChild(li);
+        updateRow(li);
+      });
+    }
+
+    function updateRow(li) {
+      var current = selection[li.getAttribute('data-date')] || null;
+      li.classList.toggle('is-unanswered', current === null);
+      Array.prototype.forEach.call(li.querySelectorAll('.mark-btn'), function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-mark') === current ? 'true' : 'false');
+      });
+    }
+
+    listEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.mark-btn');
+      if (!btn || busy) return;
+      var li = btn.closest('.answer-row');
+      var date = li.getAttribute('data-date');
+      var mark = btn.getAttribute('data-mark');
+      // 選択中の記号をもう一度タップしたら未選択に戻す
+      selection[date] = selection[date] === mark ? null : mark;
+      updateRow(li);
+    });
+
+    submitBtn.addEventListener('click', function () {
+      if (busy) return;
+      var hasUnanswered = dates.some(function (d) { return !selection[d]; });
+      if (hasUnanswered) openDialog();
+      else send();
+    });
+
+    function openDialog() {
+      dialogEl.hidden = false;
+      document.body.classList.add('is-modal');
+      confirmBackBtn.focus();
+    }
+
+    function closeDialog() {
+      dialogEl.hidden = true;
+      document.body.classList.remove('is-modal');
+    }
+
+    confirmSendBtn.addEventListener('click', function () {
+      closeDialog();
+      send();
+    });
+
+    confirmBackBtn.addEventListener('click', function () {
+      closeDialog();
+      var first = listEl.querySelector('.answer-row.is-unanswered');
+      if (first) {
+        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        first.querySelector('.mark-btn').focus({ preventScroll: true });
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !dialogEl.hidden) closeDialog();
+    });
+
+    function send() {
+      var body = {
+        memberId: memberId,
+        answers: dates.map(function (d) { return { date: d, mark: selection[d] || null }; }),
+      };
+      setBusy(true);
+      submitBtn.textContent = '送信中…';
+      fetch(API_URL, {
+        method: 'POST',
+        // Apps Script は CORS のプリフライトに対応していないため text/plain で送る
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body),
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('http ' + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          if (!data || data.ok !== true) throw new Error('api error');
+        })
+        .then(function () {
+          submitBtn.textContent = submitLabel;
+          hideError();
+          showToast();
+          return load();
+        }, function () {
+          // 入力内容はそのまま残して再送信できるようにする
+          submitBtn.textContent = submitLabel;
+          setBusy(false);
+          showError();
+        });
+    }
+
+    setBusy(true);
+    return load();
+  }
+
+  // -------------------------------------------------------------------------
 
   document.addEventListener('DOMContentLoaded', function () {
     var page = document.body.getAttribute('data-page');
     if (page === 'main') initMain();
+    else if (page === 'answer') initAnswer();
   });
 })();

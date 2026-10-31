@@ -1,0 +1,11 @@
+/* りょうた：ネイビー系・ゴシック体 */
+
+:root {
+  --accent: #1d3a6e;
+  --accent-text: #ffffff;
+  --heading-color: #1d3a6e;
+  --surface: #eef2f8;
+  --line: #c9d3e3;
+  --radius: 8px;
+  --btn-radius: 8px;
+}
